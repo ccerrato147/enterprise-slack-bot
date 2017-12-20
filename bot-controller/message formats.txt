@@ -1,0 +1,81 @@
+// Slack incoming message
+
+// { type: 'direct_message',
+//   channel: 'D8B096ZTN',
+//   user: 'U8B30BJQM',
+//   text: 'Hi',
+//   ts: '1512956791.000102',
+//   source_team: 'T8C0WKFU7',
+//   team: 'T8C0WKFU7',
+//   raw_message: 
+//    { type: 'message',
+//      channel: 'D8B096ZTN',
+//      user: 'U8B30BJQM',
+//      text: 'Hi',
+//      ts: '1512956791.000102',
+//      source_team: 'T8C0WKFU7',
+//      team: 'T8C0WKFU7' },
+//   _pipeline: { stage: 'receive' },
+//   match: [ 'Hi', index: 0, input: 'Hi' ] }
+
+// Watson Message when all data is provided
+
+{ intents: [ { intent: 'create', confidence: 0.9398089051246643 } ],
+  entities: 
+   [ { entity: 'artifact',
+       location: [Object],
+       value: 'sitio',
+       confidence: 1 },
+     { entity: 'objectname',
+       location: [Object],
+       groups: [Object],
+       value: 'sitio',
+       confidence: 1 } ],
+  input: { text: 'crear un sitio llamado IT' },
+  output: 
+   { text: 
+      [ 'Muy bien, voy a crear el sitio',
+        'Crear el sitio llamado IT tomará unos minutos' ],
+     nodes_visited: 
+      [ 'node_1_1512763493501',
+        'handler_5_1512763914230',
+        'node_1_1512763493501' ],
+     log_messages: [] },
+  context: 
+   { conversation_id: '69a1c605-3aa6-4191-b34c-cbaacb4ba225',
+     system: 
+      { dialog_stack: [Object],
+        dialog_turn_counter: 1,
+        dialog_request_counter: 1,
+        _node_output_map: [Object],
+        branch_exited: true,
+        branch_exited_reason: 'completed' },
+     artifact: 'sitio',
+     objectname: 'sitio',
+     stringwithname: 'llamado IT' } }
+
+// watson response when there is a prompt
+
+{ intents: [ { intent: 'create', confidence: 0.8883942365646362 } ],
+  entities: 
+   [ { entity: 'artifact',
+       location: [Object],
+       value: 'sitio',
+       confidence: 1 } ],
+  input: { text: 'dame un sitio' },
+  output: 
+   { text: [ '¿Cuál es el nombre?' ],
+     nodes_visited: 
+      [ 'node_1_1512763493501',
+        'handler_5_1512763914230',
+        'handler_3_1512880905408',
+        'slot_1_1512880905408' ],
+     log_messages: [] },
+  context: 
+   { conversation_id: '271a3561-a8eb-4fd2-a134-e8cb379196bb',
+     system: 
+      { dialog_stack: [Object],
+        dialog_turn_counter: 1,
+        dialog_request_counter: 1,
+        _node_output_map: {} },
+     artifact: 'sitio' } }

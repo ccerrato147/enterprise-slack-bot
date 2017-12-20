@@ -1,0 +1,21 @@
+{
+  "name": "enterprise-slack-bot",
+  "version": "1.0.0",
+  "description": "The code to build a bot that connects to Slack and automates enterprise software actions",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "bot",
+    "enterprise",
+    "cognitive"
+  ],
+  "author": "Carlos Cerrato",
+  "license": "ISC",
+  "dependencies": {
+    "botkit": "^0.6.7",
+    "express": "^4.16.2",
+    "watson-developer-cloud": "^3.0.1"
+  }
+}
