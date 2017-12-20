@@ -37,11 +37,45 @@ namespace EnterpriseAPI.Controllers
             
             for (int i = 0; i < oWebsite.Webs.Count; i++)
             {
-                sites.Add(oWebsite.Webs[i].Title);
+                sites.Add(oWebsite.Webs[i].Title + " - " + oWebsite.Webs[i].Url);
             }
 
             return sites;
         }
 
+        [HttpPost]
+        public string PostCreateSubSites([FromBody]NewSite Site)
+        {
+            try
+            {
+                if(Site != null && !string.IsNullOrEmpty(Site.Name))
+                {
+                    WebCreationInformation wci = new WebCreationInformation();
+                    wci.Url = Site.Name;
+
+                    wci.Title = Site.Name;
+                    wci.Description = Site.Name;
+                    wci.UseSamePermissionsAsParentSite = true;
+                    wci.WebTemplate = "STS#0";
+                    wci.Language = 1033;
+                    Web w = context.Site.RootWeb.Webs.Add(wci);
+                    context.Load(w,
+                        website => website.Url
+                    );
+                    context.ExecuteQuery();
+                    return "El sitio " + Site.Name + " fue creado con exito. La URL es " + w.Url;
+                }
+                return "El nombre del sitio no puede ser vacio";
+            }
+            catch(Exception e)
+            {
+                return Site.Name + " no pudo ser creado, ya le envie la informacion del error al administrador";
+            }
+        }
+
+        public class NewSite
+        {
+            public string Name { get; set; }
+        }
     }
 }

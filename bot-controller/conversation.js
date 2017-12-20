@@ -5,7 +5,7 @@ const ConversationV1 = require('watson-developer-cloud/conversation/v1');
 const conversation = new ConversationV1({
     username: process.env.CONVERSATION_USERNAME || '49ca31db-3a29-4e2f-8699-7defba60e07d',
     password: process.env.CONVERSATION_PASSWORD || 'H3B3VnuiGEqk',
-    version_date: ConversationV1.VERSION_DATE_2017_02_03
+    version_date: '2017-05-26'
 });
 
  const sendMessage = (text, context) => {

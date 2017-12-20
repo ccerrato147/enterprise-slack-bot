@@ -6,7 +6,7 @@
 // }
 
 //const tokenId = "xoxp-284030661959-283102392837-283110626277-e7befefca86459e4f3a05d16d23fd4e8";
-const tokenId = "xoxb-283837085158-zDS4yp4JfAe4ffvo9tQOFezn";
+const tokenId = "xoxb-283837085158-lUvXrsC9xaCFezwbVHMsXCFO";
 
 var Botkit = require('botkit');
 var os = require('os');
@@ -17,6 +17,9 @@ const conversation = require('./conversation');
 
 // Storing context variable
 let contextStore = [];
+
+// HTTP Rest Client
+var client = new Client();
 
 const fn = {
     slackBot(){
@@ -48,6 +51,7 @@ const fn = {
                     // ("join('\n')" is for cases when the response is multiline)
 
                     // Store the context of the conversation
+                    console.log('watson response:', response);
                     if(response.context){
                         contextStore.push(response.context);
 
@@ -55,44 +59,69 @@ const fn = {
                             contextStore.push(undefined);
                         }
 
-                        if(response.intents && response.intents.length > 0){
-                            switch(response.intents[0].intent){
-                                case "mostrarsitios":
-                                    mostrarSitios(bot, message, response);
-                                    break;
-                                default:
-                                    break;
+                        if(response.intents){
+                            if(response.intents.length > 0){
+                                console.log("intent:", response.intents[0].intent);
+                                switch(response.intents[0].intent){
+                                    case "showsites":
+                                        mostrarSitios(bot, message, response);
+                                        break;
+                                    case "create":
+                                        crearNuevo(bot, message, response);
+                                        break;
+                                    case "greeting":
+                                        saludar(bot, message, response);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }else {
+                                if(response.output && response.output.text){
+                                    bot.reply(message, response.output.text.join(' '));
+                                }
                             }
                         }
-
-                        // If the intente create then extract the name
-                        // if(response.context && response.context.stringwithname){
-                        //     response.context.stringwithname = response.context.stringwithname.replace('llamado ', '');
-                        // }
                     }
-                    // console.log('watson response:', response);
-                    // bot.reply(message, response.output.text.join('\n'));
                 })
                 .catch(err => {
+                    console.error("ERROR: ");
                     console.error(JSON.stringify(err, null, 2));
                 });
         });
     }
 }
 
-const mostrarSitios = (bot, message, response) => {
-    var client = new Client();
-    
-    // direct way 
-    client.get("http://localhost:50178/api/SharepointAPI/GetSubSitesv", (data, result) => {
-        // parsed response body as js object 
-        console.log("data:", data);
+const saludar = (bot, message, response) => {
+    bot.reply(message, response.output.text.join(' '));
+}
 
-        bot.reply(message, response.output.text.join(' ') + ":\n" + data.join('\n'));
-        // raw response 
-        //console.log(response);
+const mostrarSitios = (bot, message, response) => {    
+    // direct way 
+    client.get("http://localhost:50178/api/SharepointAPI/GetSubSites", (data, result) => {
+        bot.reply(message, response.output.text.join(' ') + "\n" + data.join('\n'));
     });
- 
+}
+
+const crearNuevo = (bot, message, response) =>{
+    if(response.context && response.context.stringwithname){
+        const name = response.context.stringwithname.replace('llamado ', '');
+        const args = {
+            data: {
+                name
+            },
+            headers: { "Content-Type": "application/json" }
+        };
+
+        bot.reply(message, response.output.text.join(' '));
+
+        // Posting new Site name
+        client.post("http://localhost:50178/api/SharepointAPI/CreateSubSites", args, (data, result) => {
+            bot.reply(message, data);
+        });
+    } else{
+        // Notificar los mensajes de Slack
+        bot.reply(message, response.output.text.join(' '));
+    }
 }
 
 module.exports = {
