@@ -1,12 +1,16 @@
 'use strict';
 
-if (!process.env.token) {
-    console.log('Error: Specify token in environment');
-    process.exit(1);
-}
+// if (!process.env.token) {
+//     console.log('Error: Specify token in environment');
+//     process.exit(1);
+// }
+
+//const tokenId = "xoxp-284030661959-283102392837-283110626277-e7befefca86459e4f3a05d16d23fd4e8";
+const tokenId = "xoxb-283837085158-zDS4yp4JfAe4ffvo9tQOFezn";
 
 var Botkit = require('botkit');
 var os = require('os');
+var Client = require('node-rest-client').Client;
 
 // Importing our custom code for watson conversaton
 const conversation = require('./conversation');
@@ -22,7 +26,7 @@ const fn = {
         });
         
         var bot = slackController.spawn({
-            token: process.env.token
+            token: tokenId
         }).startRTM((err, bot, payload) => {
             if(err){
                 throw new Error('Could not connect to slack');
@@ -51,13 +55,23 @@ const fn = {
                             contextStore.push(undefined);
                         }
 
-                        // If the intente create then extract the name
-                        if(response.context && response.context.stringwithname){
-                            response.context.stringwithname = response.context.stringwithname.replace('llamado ', '');
+                        if(response.intents && response.intents.length > 0){
+                            switch(response.intents[0].intent){
+                                case "mostrarsitios":
+                                    mostrarSitios(bot, message, response);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
+
+                        // If the intente create then extract the name
+                        // if(response.context && response.context.stringwithname){
+                        //     response.context.stringwithname = response.context.stringwithname.replace('llamado ', '');
+                        // }
                     }
-                    console.log('watson response:', response);
-                    bot.reply(message, response.output.text.join('\n'));
+                    // console.log('watson response:', response);
+                    // bot.reply(message, response.output.text.join('\n'));
                 })
                 .catch(err => {
                     console.error(JSON.stringify(err, null, 2));
@@ -66,7 +80,20 @@ const fn = {
     }
 }
 
-// https?[\da-z\.-]+    (?<=llamado).*      llamado.*   llamado(.*)    (\llamado)(.*)
+const mostrarSitios = (bot, message, response) => {
+    var client = new Client();
+    
+    // direct way 
+    client.get("http://localhost:50178/api/SharepointAPI/GetSubSitesv", (data, result) => {
+        // parsed response body as js object 
+        console.log("data:", data);
+
+        bot.reply(message, response.output.text.join(' ') + ":\n" + data.join('\n'));
+        // raw response 
+        //console.log(response);
+    });
+ 
+}
 
 module.exports = {
     fn

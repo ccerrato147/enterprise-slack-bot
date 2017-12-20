@@ -16,6 +16,7 @@
   "dependencies": {
     "botkit": "^0.6.7",
     "express": "^4.16.2",
-    "watson-developer-cloud": "^3.0.1"
+    "node-rest-client": "^3.1.0",
+    "watson-developer-cloud": "^3.0.3"
   }
 }
