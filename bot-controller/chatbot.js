@@ -5,8 +5,8 @@
 //     process.exit(1);
 // }
 
-//const tokenId = "xoxp-284030661959-283102392837-283110626277-e7befefca86459e4f3a05d16d23fd4e8";
-const tokenId = "xoxb-283837085158-pcZ4vNKxbH8aXFT7iHWNEONC";
+//const tokenId = "xoxb-283837085158-5lbu0Skef4jZpdLqItrHzSsc";
+const tokenId = process.env.slacktoken;
 
 var Botkit = require('botkit');
 var os = require('os');
