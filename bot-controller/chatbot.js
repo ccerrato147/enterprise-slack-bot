@@ -6,7 +6,7 @@
 // }
 
 //const tokenId = "xoxp-284030661959-283102392837-283110626277-e7befefca86459e4f3a05d16d23fd4e8";
-const tokenId = "xoxb-283837085158-lUvXrsC9xaCFezwbVHMsXCFO";
+const tokenId = "xoxb-283837085158-pcZ4vNKxbH8aXFT7iHWNEONC";
 
 var Botkit = require('botkit');
 var os = require('os');
@@ -71,6 +71,15 @@ const fn = {
                                         break;
                                     case "greeting":
                                         saludar(bot, message, response);
+                                        break;
+                                    case "processesquestion":
+                                        bot.reply(message, response.output.text.join(' '));
+                                        break;
+                                    case "requestvacations":
+                                        bot.reply(message, response.output.text.join(' '));
+                                        break;
+                                    case "requestsponsorship":
+                                        bot.reply(message, response.output.text.join(' '));
                                         break;
                                     default:
                                         break;
